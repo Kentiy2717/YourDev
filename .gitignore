@@ -131,3 +131,4 @@ dmypy.json
 
 .vscode
 old_style
+app/main_old.py
