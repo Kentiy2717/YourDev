@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class='cyber-hero'>
+    <div class='container'>
+        <div class='hero-content'>
+            <div class='hero-main'>
+                <div class='hero-avatar-section'>
+                    <div class='hero-avatar'>
+                        <img src='{{ url_for("static", path="/images/avatar.jpg") }}' alt='Иннокентий Мотрий' class='avatar-image'>
+                        <div class='avatar-glow'></div>
+                    </div>
+                    
+                    <div class='hero-stats-sidebar'>
+                        {% for stat, value in profile.stats.items() %}
+                        <div class='stat-item-sidebar'>
+                            <div class='stat-value-sidebar neon-text'>{{ value }}</div>
+                            <div class='stat-label-sidebar'>{{ stat|upper }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class='hero-info'>
+                    <h1 class='hero-title glitch' data-text='{{ profile.name }}'>
+                        {{ profile.name }}
+                    </h1>
+                    
+                    <p class='hero-subtitle typing-text'>{{ profile.title }}</p>
+                    <p class='hero-tagline'>{{ profile.tagline }}</p>
+                    <p class='hero-description'>{{ profile.about }}</p>
+                    
+                    <div class='hero-actions'>
+                        <a href='#projects' class='cyber-button giant primary'>
+                            <span class='btn-glitch'>👀 СМОТРЕТЬ ПРОЕКТЫ</span>
+                        </a>
+                        <a href='#contact' class='cyber-button giant'>
+                            <span class='btn-glitch'>💬 НАПИСАТЬ МНЕ</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Projects Section -->
+<section id='projects' class='cyber-projects'>
+    <div class='container'>
+        <h2 class='section-title glitch' data-text='💼 МОИ ПРОЕКТЫ'>
+            💼 МОИ ПРОЕКТЫ
+        </h2>
+        
+        <div class='projects-grid'>
+            {% for project_id, project in projects.items() %}
+            <div class='project-card cyber-card'>
+                <div class='card-badge {{ project.badge|lower }}'>{{ project.badge }}</div>
+                
+                <div class='project-header'>
+                    <h3 class='project-title'>{{ project.title }}</h3>
+                    <div class='project-status'>{{ project.status }}</div>
+                </div>
+                
+                <p class='project-description'>{{ project.description }}</p>
+                
+                <div class='project-highlights'>
+                    {% for highlight in project.highlights %}
+                    <div class='highlight-item'>
+                        <span class='highlight-icon'>✅</span>
+                        {{ highlight }}
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class='project-technologies'>
+                    {% for tech in project.technologies %}
+                    <span class='tech-tag neon-tag'>{{ tech }}</span>
+                    {% endfor %}
+                </div>
+                
+                <div class='project-actions'>
+                    <a href='{{ project.github_url }}' class='cyber-button small' target='_blank'>
+                        <span class='btn-glitch'><i class='fab fa-github'></i> КОД</span>
+                    </a>
+                    <a href='{{ url_for("project_detail", project_id=project_id) }}' class='cyber-button small primary'>
+                        <span class='btn-glitch'>ПОДРОБНЕЕ</span>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Services Preview -->
+<section class='cyber-services'>
+    <div class='container'>
+        <h2 class='section-title glitch' data-text='🏗️ ЧТО Я ДЕЛАЮ'>
+            🏗️ ЧТО Я ДЕЛАЮ
+        </h2>
+        
+        <div class='services-preview'>
+            {% for service in services %}
+            <div class='service-preview-card {% if service.highlight %}highlighted-preview{% endif %}'>
+                {% if service.highlight %}
+                <div class='preview-badge'>ПОПУЛЯРНОЕ</div>
+                {% endif %}
+                <div class='service-icon'>
+                    <i class='{{ service.icon }}'></i>
+                </div>
+                <h3>{{ service.title }}</h3>
+                <p>{{ service.description }}</p>
+                <div class='service-price'>{{ service.price }}</div>
+                <a href='/services' class='cyber-button {% if service.highlight %}primary{% endif %}'>
+                    <span class='btn-glitch'>{{ service.cta }}</span>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class='development-process'>
+            <div class='process-header'>
+                <h3>👨🏻‍💻 Мой процесс разработки</h3>
+                <p>От идеи до работающего решения - прозрачно и эффективно</p>
+            </div>
+            
+            <div class='process-timeline-compact'>
+                <div class='process-phase'>
+                    <div class='phase-number'>01</div>
+                    <div class='phase-content'>
+                        <h4>Анализ & Планирование</h4>
+                        <p>Погружаемся в задачу, определяем цели и составляем детальный план</p>
+                    </div>
+                    <div class='phase-duration'>1-2 дня</div>
+                </div>
+                
+                <div class='process-phase'>
+                    <div class='phase-number'>02</div>
+                    <div class='phase-content'>
+                        <h4>Прототип & Дизайн</h4>
+                        <p>Создаем работающий прототип и проектируем архитектуру</p>
+                    </div>
+                    <div class='phase-duration'>2-3 дня</div>
+                </div>
+                
+                <div class='process-phase'>
+                    <div class='phase-number'>03</div>
+                    <div class='phase-content'>
+                        <h4>Разработка & Тестирование</h4>
+                        <p>Пишем качественный код с постоянным тестированием</p>
+                    </div>
+                    <div class='phase-duration'>1-3 недели</div>
+                </div>
+                
+                <div class='process-phase'>
+                    <div class='phase-number'>04</div>
+                    <div class='phase-content'>
+                        <h4>Запуск & Поддержка</h4>
+                        <p>Деплоим на хостинг и обеспечиваем дальнейшую поддержку</p>
+                    </div>
+                    <div class='phase-duration'>постоянно</div>
+                </div>
+            </div>
+            
+            <div class='process-stats'>
+                <div class='process-stat'>
+                    <div class='stat-value'>2-3 дня</div>
+                    <div class='stat-label'>до прототипа</div>
+                </div>
+                <div class='process-stat'>
+                    <div class='stat-value'>95%</div>
+                    <div class='stat-label'>проектов в срок</div>
+                </div>
+                <div class='process-stat'>
+                    <div class='stat-value'>24/7</div>
+                    <div class='stat-label'>поддержка</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id='contact' class='cyber-contact'>
+    <div class='container'>
+        <h2 class='section-title glitch' data-text='📡 СВЯЖИСЬ СО МНОЙ'>
+            📡 СВЯЖИСЬ СО МНОЙ
+        </h2>
+        
+        <div class='contact-grid'>
+            {% for platform, info in profile.contacts.items() %}
+            <a href='{{ info.url }}' class='contact-card cyber-card' target='_blank'>
+                <div class='contact-icon'>
+                    <i class='{{ info.icon }}'></i>
+                </div>
+                <div class='contact-platform'>{{ platform|upper }}</div>
+                <div class='contact-info'>{{ info.text }}</div>
+                <div class='contact-arrow'>→</div>
+            </a>
+            {% endfor %}
+        </div>
+        
+        <div class='cta-banner'>
+            <h3>🛠️ ИЩУ ПРОЕКТЫ ДЛЯ РАЗРАБОТКИ</h3>
+            <p>Готов взяться за интересные задачи и развиваться вместе с вашим проектом!</p>
+            <a href='https://t.me/kentiy2717' class='cyber-button giant primary pulse-btn'>
+                <span class='btn-glitch'>💬 ОБСУДИТЬ ЗАДАЧУ</span>
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
