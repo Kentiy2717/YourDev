@@ -5,12 +5,12 @@ from fastapi.responses import HTMLResponse
 
 app = FastAPI(
     title='🌎 YOUR PYTHON DEV',
-    description='Elite Python Backend Developer Portfolio',
-    version='2.0.0'
+    description='Python Full-Stack Developer Portfolio',
+    version='1.0.0'
 )
 
-app.mount('/static', StaticFiles(directory='static'), name='static')
-templates = Jinja2Templates(directory='templates')
+app.mount('/static', StaticFiles(directory='app/static'), name='static')
+templates = Jinja2Templates(directory='app/templates')
 
 PROFILE_DATA = {
     'name': 'ИННОКЕНТИЙ МОТРИЙ',
@@ -25,7 +25,7 @@ PROFILE_DATA = {
         'опыт в IT': '2 года',
         'коммерческий опыт': '1 год', 
         'завершенных проектов': '35+',
-        'drunk coffee': '∞ чашек'
+        'drunk coffee': '♾️'
     },
     'contacts': {
         'telegram': {'url': 'https://t.me/kentiy2717', 'text': '@kentiy2717', 'icon': 'fab fa-telegram'},
