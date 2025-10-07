@@ -10,13 +10,13 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.security import OAuth2PasswordRequestForm
 
-from app.auth import (
+from app.core.auth import (
     create_access_token,
     create_refresh_token,
     verify_password
 )
-from app.config import SECRET_KEY, ALGORITHM
-from app.dependencies.db_depends import get_async_db
+from app.core.config import settings
+from app.core.database import get_async_db
 from app.models.users import User as UserModel
 
 
@@ -43,12 +43,12 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(),
         )
     access_token = create_access_token(data={
         'sub': user.email,
-        'is_admin': user.is_admin,
+        'role': user.role,
         'id': user.id
     })
     refresh_token = create_refresh_token(data={
         'sub': user.email,
-        'is_admin': user.is_admin,
+        'role': user.role,
         'id': user.id
     })
     return {
@@ -69,7 +69,9 @@ async def refresh_token(refresh_token: str,
         headers={'WWW-Authenticate': 'Bearer'},
     )
     try:
-        payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(refresh_token,
+                             settings.SECRET_KEY,
+                             algorithms=[settings.ALGORITHM])
         email: str = payload.get('sub')
         if email is None:
             raise credentials_exception
@@ -84,7 +86,7 @@ async def refresh_token(refresh_token: str,
 
     access_token = create_access_token(data={
         'sub': user.email,
-        'is_admin': user.is_admin,
+        'role': user.role,
         'id': user.id
     })
     return {'access_token': access_token, 'token_type': 'bearer'}

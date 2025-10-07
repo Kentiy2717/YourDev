@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
 from app.routers import (
     auth_routers,
@@ -12,6 +13,8 @@ app = FastAPI(
     description='Python Full-Stack Developer Portfolio',
     version='1.0.0'
 )
+
+app.mount('/static', StaticFiles(directory='app/static'), name='static')
 
 app.include_router(auth_routers.router)
 app.include_router(projects_routers.router)

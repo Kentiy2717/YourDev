@@ -7,7 +7,7 @@ from fastapi import (
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.dependencies.db_depends import get_async_db
+from app.core.database import get_async_db
 from app.models.services import Service as ServiceModel
 from app.schemas.services_schemas import (
     ServiceCreate,

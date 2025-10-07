@@ -1,12 +1,27 @@
-import logging
-
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.exc import SQLAlchemyError
 from typing import AsyncGenerator
 
-from app.database import async_session_maker
+from sqlalchemy.ext.asyncio import (
+    create_async_engine,
+    async_sessionmaker,
+    AsyncSession
+)
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import DeclarativeBase
 
-logger = logging.getLogger(__name__)
+from app.core.config import settings
+from app.core.logger import logger
+
+async_engine = create_async_engine(settings.DATABASE_URL, echo=True)
+
+async_session_maker = async_sessionmaker(
+    async_engine,
+    expire_on_commit=False,
+    class_=AsyncSession
+)
+
+
+class Base(DeclarativeBase):
+    pass
 
 
 async def get_async_db() -> AsyncGenerator[AsyncSession, None]:

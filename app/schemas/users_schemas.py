@@ -1,5 +1,7 @@
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
 
+from app.models.users import UserRole
+
 
 class UserCreate(BaseModel):
     email: EmailStr = Field(description="Email пользователя")
@@ -24,6 +26,6 @@ class AdminCreate(BaseModel):
         min_length=8,
         description="Пароль (минимум 8 символов)"
     )
-    is_admin: bool = Field(default=True)
+    role: UserRole = Field(default='admin')
 
     model_config = ConfigDict(from_attributes=True)

@@ -7,8 +7,8 @@ from fastapi import (
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.auth import hash_password
-from app.dependencies.db_depends import get_async_db
+from app.core.auth import hash_password
+from app.core.database import get_async_db
 from app.models.users import User as UserModel
 from app.schemas.users_schemas import (
     AdminCreate,
@@ -28,7 +28,7 @@ async def get_users(db: AsyncSession = Depends(get_async_db)):
     '''Возвращает всех активных заказчиков.'''
 
     customer_query = await db.scalars(select(UserModel).where(
-        ~UserModel.is_admin,
+        UserModel.role == 'customer',
         UserModel.is_active
     ))
     return customer_query.all()
@@ -66,7 +66,7 @@ async def create_admin(user: AdminCreate,
     '''Регистрирует админа (работает только один раз).
     Не может быть двух владельцев сайта.'''
 
-    admin = await db.scalar(select(UserModel).where(UserModel.is_admin))
+    admin = await db.scalar(select(UserModel).where(UserModel.role == 'admin'))
     if admin:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
@@ -75,7 +75,8 @@ async def create_admin(user: AdminCreate,
 
     db_admin = UserModel(
         email=user.email,
-        hashed_password=hash_password(user.password)
+        hashed_password=hash_password(user.password),
+        role='admin'
     )
 
     db.add(db_admin)

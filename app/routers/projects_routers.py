@@ -7,7 +7,7 @@ from fastapi import (
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.dependencies.db_depends import get_async_db
+from app.core.database import get_async_db
 from app.models.projects import Project as ProjectModel
 from app.schemas.projects_schemas import (
     ProjectCreate,
