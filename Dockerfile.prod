@@ -1,0 +1,35 @@
+FROM tiangolo/uvicorn-gunicorn:python3.11-slim
+
+# устанавливаем переменные окружения
+ENV HOME=/home/your_dev \
+    APP_HOME=/home/your_dev/app \
+    PYTHONPATH="$PYTHONPATH:/home/your_dev" \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+# создаем домашнюю директорию для пользователя(/home/your_dev) и директорию для проекта(/home/your_dev/app)
+# создаем группу your_dev
+# создаем отдельного пользователя your_dev
+RUN mkdir -p $APP_HOME \
+ && groupadd -r your_dev\
+ && useradd -r -g your_dev your_dev
+
+# устанавливаем рабочую директорию
+WORKDIR $HOME
+
+# копирование проекта your_devAPI в рабочую директорию
+COPY . $APP_HOME
+COPY ../requirements.txt .
+
+# обновление pip
+# установка зависимостей из списка requirements.txt
+# изменение владельца, для всех директорий и файлов проекта, на пользователя your_dev
+RUN pip install --upgrade pip \
+ && pip install -r requirements.txt \
+ && chown -R your_dev:your_dev .
+
+# изменение рабочего пользователя на your_dev
+USER your_dev
+
+
+WORKDIR $APP_HOME
