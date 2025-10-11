@@ -58,7 +58,7 @@ async def create_service(service: ServiceCreate, db: AsyncSession = Depends(get_
             response_model=ServiceSchema,
             status_code=status.HTTP_200_OK)
 async def update_service(service_id: int, db: AsyncSession = Depends(get_async_db)):
-    '''Обновлет товар по его ID. ДОСТУПНО ТОЛЬКО АДМИНУ!'''
+    '''Обновлет проект по его ID. ДОСТУПНО ТОЛЬКО АДМИНУ!'''
     pass
 
 

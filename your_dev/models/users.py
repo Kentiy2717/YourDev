@@ -1,6 +1,5 @@
 from datetime import datetime
 from sqlalchemy import (
-    JSON,
     ForeignKey,
     String,
     select
@@ -33,8 +32,8 @@ class User(Base):
         index=True
     )
     first_name: Mapped[str] = mapped_column(String(50))
-    last_name: Mapped[str | None] = mapped_column(String(50))
     middle_name: Mapped[str | None] = mapped_column(String(50))
+    last_name: Mapped[str | None] = mapped_column(String(50))
     hashed_password: Mapped[str]
     is_active: Mapped[bool] = mapped_column(default=True)
     role: Mapped[UserRole] = mapped_column(default='customer')
@@ -59,21 +58,12 @@ class AdminProfile(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
-    name_for_index: Mapped[str] = mapped_column(
-        String(50),
-        default='ИННОКЕНТИЙ МОТРИЙ'
-    )
-    title: Mapped[str] = mapped_column(
-        String(50),
-        default='🐍 PYTHON FULL-STACK DEVELOPER 🐍'
-    )
-    slogan: Mapped[str] = mapped_column(
-        String(50),
-        default='💡 Превращаю идеи в работающие решения'
-    )
-    about: Mapped[str | None]
-    stats: Mapped[dict] = mapped_column(JSON)
-    contacts: Mapped[dict | None] = mapped_column(JSON)
+    name_for_index: Mapped[str] = mapped_column(String(50))
+    title: Mapped[str] = mapped_column(String(50))
+    slogan: Mapped[str] = mapped_column(String(50))
+    about: Mapped[str] 
+    stats: Mapped[dict]
+    contacts: Mapped[dict]
     created_at: Mapped[datetime] = mapped_column(default=datetime.now())
     is_active: Mapped[bool] = mapped_column(default=True)
 

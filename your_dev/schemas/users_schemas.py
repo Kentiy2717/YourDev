@@ -5,6 +5,9 @@ from your_dev.models.users import UserRole
 
 class UserCreate(BaseModel):
     email: EmailStr = Field(description="Email пользователя")
+    first_name: Mapped[str] = mapped_column(String(50))
+    last_name: Mapped[str | None] = mapped_column(String(50))
+    middle_name: Mapped[str | None] = mapped_column(String(50))
     password: str = Field(
         min_length=8,
         description="Пароль (минимум 8 символов)"
