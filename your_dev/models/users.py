@@ -1,5 +1,16 @@
-from sqlalchemy import JSON, ForeignKey, String
-from sqlalchemy.orm import Mapped, mapped_column
+from datetime import datetime
+from sqlalchemy import (
+    JSON,
+    ForeignKey,
+    String,
+    select
+)
+from sqlalchemy.orm import (
+    Mapped,
+    mapped_column,
+    validates,
+    relationship
+)
 
 from your_dev.core.database import Base
 
@@ -7,13 +18,11 @@ from typing import TYPE_CHECKING, Literal
 if TYPE_CHECKING:
     pass
 
-# !!!!           ЭТО ТОЛЬКО НАБРОСОК            !!!!
-# !!!!  НУЖНО ПРОДУМАТЬ И ДОДЕЛАТЬ РЕАЛИЗАЦИЮ   !!!!
-
-UserRole = Literal['admin', 'customet', 'observer']
+UserRole = Literal['admin', 'customer', 'observer']
 
 
 class User(Base):
+    '''Общая модель пользователя.'''
 
     __tablename__ = 'users'
 
@@ -28,36 +37,77 @@ class User(Base):
     middle_name: Mapped[str | None] = mapped_column(String(50))
     hashed_password: Mapped[str]
     is_active: Mapped[bool] = mapped_column(default=True)
-    role: Mapped[UserRole] = mapped_column(default='observer')
-    about: Mapped[str | None]
+    role: Mapped[UserRole] = mapped_column(default='customer')
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now())
+
+    admin_profiles: Mapped[list['AdminProfile']] = relationship(
+        back_populates='user',
+        cascade='all, delete-orphan'
+    )
+
+    @validates('email')
+    def validate_email(self, key, email):
+        if '@' not in email:
+            raise ValueError('Invalid email address')
+        return email
 
 
-class Admin(User):
+class AdminProfile(Base):
+    '''Модель для версионирования информации в профиле админа.'''
 
-    __tablename__ = 'admin'
+    __tablename__ = 'admin_profile'
 
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
-    title: Mapped[str] = mapped_column(
-        String(50),
-        default='🐍 PYTHON FULL-STACK DEVELOPER 🐍'
-    )
     name_for_index: Mapped[str] = mapped_column(
         String(50),
         default='ИННОКЕНТИЙ МОТРИЙ'
+    )
+    title: Mapped[str] = mapped_column(
+        String(50),
+        default='🐍 PYTHON FULL-STACK DEVELOPER 🐍'
     )
     slogan: Mapped[str] = mapped_column(
         String(50),
         default='💡 Превращаю идеи в работающие решения'
     )
-    contacts: Mapped[dict | None] = mapped_column(JSON)
+    about: Mapped[str | None]
     stats: Mapped[dict] = mapped_column(JSON)
+    contacts: Mapped[dict | None] = mapped_column(JSON)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now())
+    is_active: Mapped[bool] = mapped_column(default=True)
 
+    user: Mapped['User'] = relationship(back_populates='admin_profile')
 
-class Customer(User):
+    @validates('user_id')
+    async def validate_user_role(self, key, user_id):
+        '''Вызывает исключение, если запрос не от админа.'''
 
-    __tablename__ = 'customer'
+        from sqlalchemy.orm import object_session
+        session = object_session(self)
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
-    company_name: Mapped[str] = mapped_column(String(50))
+        if session:
+            user = await session.scalar(select(User)
+                                        .where(User.id == user_id))
+            if user and user.role != 'admin':
+                raise ValueError(
+                    'AdminProfile может быть связан только с '
+                    'пользователями с правами администратора'
+                )
+        return user_id
+
+    @validates('is_active')
+    async def validate_user_role(self, key, is_active):
+        '''Если мы добавили профиль, который хотим активировать сразу,
+        то сначала неактивируем текущий активный профиль.'''
+
+        from sqlalchemy.orm import object_session
+        session = object_session(self)
+
+        if session and is_active:
+            active_profile = await session.scalar(
+                select(AdminProfile).where(AdminProfile.is_active)
+            )
+            if active_profile is not None:
+                active_profile.is_active = False
+        return is_active
