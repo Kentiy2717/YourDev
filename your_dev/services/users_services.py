@@ -30,6 +30,10 @@ if TYPE_CHECKING:
     pass
 
 
+class InitialService:
+    '''Сервисный класс для создания стартовых проектов.'''
+
+
 class UserService:
     '''Сервисный класс для работы с профилями пользователей.'''
 
@@ -54,7 +58,7 @@ class AdminProfileService:
 
     async def _create_account_and_profile_admin_when_initial_app(self) -> None:
         '''Создает учетную запить и профиль админа,
-        при первом обращении за ним. Возвращает стартовый профиль админа.'''
+        при первом обращении за ним.'''
 
         admin = await self._user_repo.get_admin()
         if admin is None:
@@ -72,7 +76,7 @@ class AdminProfileService:
             )
 
             # Создаем стартовый профиль админа.
-            await self._profile_repo.create_profile(
+            initial_profile = await self._profile_repo.create_profile(
                 profile_data=dict(
                     name_for_index=INITIAL_PROFILE_DATA['name'],
                     title=INITIAL_PROFILE_DATA['title'],
@@ -84,6 +88,7 @@ class AdminProfileService:
                 )
             )
         logger.info('✅ Админ успешно создан со стартовыми настройками.')
+        return initial_profile
 
     async def get_active_profile(self) -> AdminProfile:
         '''Возвращает профиль админа или создает его при первом обращении,
@@ -94,11 +99,7 @@ class AdminProfileService:
 
         # Если админ еще не создан, то создаем стартовый аккаунт и профиль.
         if active_profile is None:
-            initial_profile = await self._create_account_and_profile_admin_when_initial_app()
-            return initial_profile
-
-        # Получаем профиль из репозитория, если админ уже создан.
-        active_profile = await self._profile_repo.get_active_profile()
+            active_profile = await self._create_account_and_profile_admin_when_initial_app()
         return active_profile
 
     async def create_profile(self, profile_data: AdminProfileCreate) -> AdminProfile:

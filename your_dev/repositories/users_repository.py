@@ -1,10 +1,6 @@
-import os
-from typing import TYPE_CHECKING
-
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from your_dev.core.auth import hash_password
 from your_dev.models.users import AdminProfile, User
 
 

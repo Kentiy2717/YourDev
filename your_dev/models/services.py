@@ -2,10 +2,6 @@
 
 # from your_dev.core.database import Base
 
-# from typing import TYPE_CHECKING
-# if TYPE_CHECKING:
-#     pass
-
 
 # class Service(Base):
 #     __tablename__ = 'services'

@@ -31,7 +31,7 @@ class Project(Base):
     __tablename__ = 'projects'
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name_project: Mapped[str] = mapped_column(String(100), index=True)
+    name_project: Mapped[str] = mapped_column(String(100))
     title: Mapped[str] = mapped_column(unique=True)
     badge: Mapped[Badge] = mapped_column(default='ЛИЧНЫЙ ПРОЕКТ')
     description: Mapped[str]
@@ -40,9 +40,9 @@ class Project(Base):
     technologies: Mapped[list[str]] = mapped_column(JSON, default=list)
     github_url: Mapped[str] = mapped_column(String(200), nullable=True)
     demo_url: Mapped[str] = mapped_column(String(200), nullable=True)
-    status: Mapped[Status] = mapped_column(default='Онлайн', index=True)
+    status: Mapped[Status] = mapped_column(default='Онлайн')
     complexity: Mapped[ComplexityLevel] = mapped_column(SmallInteger, default=1)
     automation_level: Mapped[int] = mapped_column(SmallInteger, default=0)
     metrics: Mapped[dict] = mapped_column(JSON)
-    is_active: Mapped[bool] = mapped_column(default=False, index=True)
+    is_active: Mapped[bool] = mapped_column(default=False)
     created_at: Mapped[datetime] = mapped_column(default=datetime.now())
