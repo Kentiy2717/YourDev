@@ -8,7 +8,7 @@ class ProjectRepository:
     def __init__(self, db: AsyncSession):
         self.db = db
 
-    async def get_by_name_project(self, name_project: str) -> Project | None:
+    async def get_by_name_project(self, name_project: str) -> Project:
         '''Возвращает проект про его name_project. Используется в админке.'''
 
         project = await self.db.scalar(

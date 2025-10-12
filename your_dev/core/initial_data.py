@@ -100,7 +100,7 @@ INITIAL_SERVICES_DATA = [
             'Быстрые итерации без бюрократии',
             'Полный контроль качества на каждом этапе',
             'Анализ требований и проектирование',
-            'Backend на Python (FastAPI/Django/Flask)', 
+            'Backend на Python (FastAPI/Django/Flask)',
             'Frontend на Jinja2 шаблонах',
             'Деплой на хостинг и настройка',
             'Базовая SEO оптимизация',

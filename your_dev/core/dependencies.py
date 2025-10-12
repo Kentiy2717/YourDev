@@ -1,14 +1,16 @@
 '''Прочие зависимости'''
 from typing import TYPE_CHECKING
-from fastapi import Depends, HTTPException, Request
+from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from your_dev.repositories.projects_repository import ProjectRepository
+from your_dev.repositories.service_repository import ServiceRepository
 from your_dev.repositories.users_repository import (
     AdminProfileRepository,
     UserRepository
 )
 from your_dev.core.database import get_async_db
+from your_dev.services.service_services import ServiceService
 from your_dev.services.users_services import AdminProfileService
 from your_dev.services.project_services import ProjectService
 
@@ -16,12 +18,6 @@ if TYPE_CHECKING:
     from your_dev.repositories.users_repository import (
         AdminProfileRepository,
         UserRepository
-    )
-    from your_dev.schemas.users_schemas import (
-        AdminProfile,
-        AdminProfileCreate,
-        User,
-        UserCreate
     )
 
 
@@ -41,6 +37,11 @@ def get_project_repository(
     return ProjectRepository(db)
 
 
+def get_service_repository(
+        db: AsyncSession = Depends(get_async_db)) -> ServiceRepository:
+    return ProjectRepository(db)
+
+
 # СЕРВИСЫ
 def get_admin_profile_service(
     user_repo: UserRepository = Depends(get_user_repository),
@@ -50,9 +51,15 @@ def get_admin_profile_service(
 
 
 def get_project_service(
-        project_repo: UserRepository = Depends(get_project_repository)
+        project_repo: ProjectRepository = Depends(get_project_repository)
 ) -> ProjectService:
     return ProjectService(project_repo)
+
+
+def get_service_service(
+        service_repo: ServiceRepository = Depends(get_service_repository)
+) -> ServiceService:
+    return ServiceService(service_repo)
 
 
 # def check_user_is_admin(current_user: User = Depends(get_current_user)) -> User:

@@ -1,7 +1,11 @@
 import os
 
 from your_dev.core.auth import hash_password
-from your_dev.core.initial_data import INITIAL_PROFILE_DATA, INITIAL_PROJECTS_DATA
+from your_dev.core.initial_data import (
+    INITIAL_PROFILE_DATA,
+    INITIAL_PROJECTS_DATA,
+    INITIAL_SERVICES_DATA
+)
 from your_dev.core.logger import logger
 from your_dev.repositories.service_repository import ServiceRepository
 from your_dev.repositories.users_repository import (
@@ -48,7 +52,7 @@ class InitializationService:
             logger.info('💡 Админ уже существует.')
 
     async def create_profile_if_not_exist(self) -> None:
-        '''Создает начальные профили админа, если их нет.'''
+        '''Создает начальный профиль админа, если их нет.'''
 
         profiles = await self._profile_repo.get_all_profiles()
         if not profiles:
@@ -108,8 +112,38 @@ class InitializationService:
                 )
 
     async def create_services_if_not_exist(self) -> None:
-        '''Создает начальные проекты админа, если их нет.'''
-        pass
+        '''Создает начальные услуги админа, если их нет.'''
+
+        for service_data in INITIAL_SERVICES_DATA:
+            service = await self._service_repo.get_service_by_title(
+                title=service_data['title']
+            )
+            if not service:
+
+                # Создаем стартовые услуги.
+                await self._service_repo.create_service(
+                    service_data=dict(
+                        title=service_data['title'],
+                        description=service_data['description'],
+                        price=service_data['price'],
+                        features=service_data['features'],
+                        process=service_data['process'],
+                        technologies=service_data['technologies'],
+                        cta=service_data['cta'],
+                        icon=service_data['icon'],
+                        highlight=service_data['highlight'],
+                        is_active=True,
+                    )
+                )
+                logger.info(
+                    f'✅ Стартовые проект ({service_data['title']}) '
+                    'успешно создан.'
+                )
+            else:
+                logger.info(
+                    f'💡 Стартовый проект {service_data['title']} '
+                    'уже существует.'
+                )
 
     async def delete_all_projects(self) -> None:
         '''Для наладки.'''

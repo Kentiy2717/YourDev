@@ -9,17 +9,10 @@ from fastapi.responses import HTMLResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from your_dev.core.dependencies import get_admin_profile_service
-from your_dev.main_old import SERVICES_DATA
+from your_dev.core.dependencies import get_service_service
 from your_dev.core import templates
 
-from your_dev.core.database import get_async_db
-from your_dev.services.users_services import AdminProfileService
-# from your_dev.models.services import Service as ServiceModel
-# from your_dev.schemas.services_schemas import (
-#     ServiceCreate,
-#     Service as ServiceSchema
-# )
+from your_dev.services.service_services import ServiceService
 
 
 router = APIRouter(
@@ -31,14 +24,13 @@ router = APIRouter(
 @router.get('/', response_class=HTMLResponse)
 async def services(
     request: Request,
-    profile_service: AdminProfileService = Depends(get_admin_profile_service)
+    service_service: ServiceService = Depends(get_service_service)
 ):
 
-    profile_data = await profile_service.get_active_profile()
+    service_data = await service_service.get_all_active_services()
     return templates.TemplateResponse('services.html', {
         'request': request,
-        'services': SERVICES_DATA,
-        'profile': profile_data
+        'services': service_data,
     })
 
 
