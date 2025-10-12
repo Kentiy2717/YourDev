@@ -1,51 +1,51 @@
-from sqlalchemy import JSON, ForeignKey, String
-from sqlalchemy.orm import Mapped, mapped_column
+from datetime import datetime
+from sqlalchemy import (
+    JSON,
+    String
+)
+from sqlalchemy.orm import (
+    Mapped,
+    mapped_column
+)
 
 from your_dev.core.database import Base
 
-from typing import TYPE_CHECKING, Literal
-if TYPE_CHECKING:
-    pass
+from typing import Literal
 
-# !!!!           ЭТО ТОЛЬКО НАБРОСОК            !!!!
-# !!!!  НУЖНО ПРОДУМАТЬ И ДОДЕЛАТЬ РЕАЛИЗАЦИЮ   !!!!
-
-UserRole = Literal['admin', 'customet', 'observer']
+UserRole = Literal['admin', 'customer']
 
 
-class User(Base):
+class AdminProfile(Base):
+    '''Модель для версионирования информации в профиле админа.'''
 
-    __tablename__ = 'users'
+    __tablename__ = 'admin_profiles'
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    email: Mapped[str] = mapped_column(String(50), unique=True, index=True)
-    hashed_password: Mapped[str]
-    is_active: Mapped[bool] = mapped_column(default=True)
-    role: Mapped[UserRole] = mapped_column(default='observer')
-    contacts: Mapped[dict | None] = mapped_column(JSON)
-
-
-class Admin(User):
-
-    __tablename__ = 'admin'
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
-    name: Mapped[str] = mapped_column(String(50))
+    name_for_index: Mapped[str] = mapped_column(String(50))
     title: Mapped[str] = mapped_column(String(50))
     slogan: Mapped[str] = mapped_column(String(50))
     about: Mapped[str]
     stats: Mapped[dict] = mapped_column(JSON)
+    contacts: Mapped[dict] = mapped_column(JSON)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now())
+    is_active: Mapped[bool] = mapped_column(default=False)
 
 
-class Customer(User):
+class User(Base):
+    '''Общая модель пользователя.'''
 
-    __tablename__ = 'customer'
+    __tablename__ = 'users'
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
+    email: Mapped[str] = mapped_column(
+        String(50),
+        unique=True,
+        index=True
+    )
+    last_name: Mapped[str | None] = mapped_column(String(50))
     first_name: Mapped[str] = mapped_column(String(50))
-    last_name: Mapped[str] = mapped_column(String(50))
-    middle_name: Mapped[str] = mapped_column(String(50))
-    company_name: Mapped[str] = mapped_column(String(50))
-    notes: Mapped[str]
+    middle_name: Mapped[str | None] = mapped_column(String(50))
+    password: Mapped[str]
+    is_active: Mapped[bool] = mapped_column(default=True)
+    role: Mapped[UserRole] = mapped_column(default='customer')
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now())
