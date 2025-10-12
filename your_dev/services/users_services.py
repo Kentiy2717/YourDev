@@ -103,6 +103,8 @@ class AdminProfileService:
         return active_profile
 
     async def create_profile(self, profile_data: AdminProfileCreate) -> AdminProfile:
+        '''Создает профиль админа и возвращает его.'''
+
         # Проверка что user - admin (РАЗКОМЕНТИТЬ, КОГДА СДЕЛАЮ АВТОРИЗАЦИЮ)
         # await self._validate_user_role(user_id=user_id)
         await self._validate_is_active_profile(is_active=profile_data.is_active)

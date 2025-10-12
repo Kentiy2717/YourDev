@@ -20,12 +20,6 @@ from your_dev.routers import (
 )
 from your_dev.services.initialization_services import InitializationService
 
-app = FastAPI(
-    title='🌎 YOUR PYTHON DEV',
-    description='Python Full-Stack Developer Portfolio',
-    version='1.0.0'
-)
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -42,7 +36,10 @@ async def lifespan(app: FastAPI):
                 project_repo=ProjectRepository(session),
                 service_repo=ServiceRepository(session),
             )
-            # await initialization_service.initialize_default_data()
+            await initialization_service.create_admin_if_not_exist()
+            await initialization_service.create_profile_if_not_exist()
+            # await initialization_service.create_projects_if_not_exist()
+            # await initialization_service.create_services_if_not_exist()
             print("✅ Initialization completed!")
 
             await session.commit()
@@ -59,6 +56,13 @@ async def lifespan(app: FastAPI):
 
     # Shutdown
     print("👋 Shutting down...")
+
+app = FastAPI(
+    title='🌎 YOUR PYTHON DEV',
+    description='Python Full-Stack Developer Portfolio',
+    version='1.0.0',
+    lifespan=lifespan
+)
 
 app.mount('/static', StaticFiles(directory='your_dev/static'), name='static')
 
