@@ -1,11 +1,11 @@
-from pydantic import BaseModel, EmailStr, Field, ConfigDict
+# from pydantic import BaseModel, EmailStr, Field, ConfigDict
 
 
-class ServiceCreate(BaseModel):
-    pass
+# class ServiceCreate(BaseModel):
+#     pass
 
 
-class Service(BaseModel):
-    pass
+# class Service(BaseModel):
+#     pass
 
-    model_config = ConfigDict(from_attributes=True)
+#     model_config = ConfigDict(from_attributes=True)

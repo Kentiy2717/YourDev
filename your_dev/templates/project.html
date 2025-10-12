@@ -98,14 +98,16 @@
                                 {% endfor %}
                             </div>
                         </div>
-                        <div class='metric'>
-                            <span class='metric-label'>АВТОМАТИЗАЦИЯ</span>
-                            <div class='automation-bar'>
-                                <div class='automation-fill' style='width: {{ project.automation_level }}%'>
-                                    <span>{{ project.automation_level }}%</span>
+                        {% if project.automation_level %}
+                            <div class='metric'>
+                                <span class='metric-label'>АВТОМАТИЗАЦИЯ</span>
+                                <div class='automation-bar'>
+                                    <div class='automation-fill' style='width: {{ project.automation_level }}%'>
+                                        <span>{{ project.automation_level }}%</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        {% endif %}
                     </div>
                 </div>
 

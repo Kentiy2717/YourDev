@@ -25,6 +25,7 @@ class Base(DeclarativeBase):
 
 
 async def get_async_db() -> AsyncGenerator[AsyncSession, None]:
+    pass
     '''
     Асинхронно предоставляет сессию SQLAlchemy для работы с PostgreSQL.
 
