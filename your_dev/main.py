@@ -38,7 +38,7 @@ async def lifespan(app: FastAPI):
             )
             await initialization_service.create_admin_if_not_exist()
             await initialization_service.create_profile_if_not_exist()
-            # await initialization_service.create_projects_if_not_exist()
+            await initialization_service.create_projects_if_not_exist()
             # await initialization_service.create_services_if_not_exist()
             print("✅ Initialization completed!")
 

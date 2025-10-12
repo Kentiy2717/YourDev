@@ -8,6 +8,14 @@ class ProjectService:
     def __init__(self, project_repo: ProjectRepository):
         self._project_repo = project_repo
 
+    async def get_active_project_by_name_project(self, name_project: str) -> Project | None:
+        '''Возвращает профиль админа или создает его при первом обращении,
+        если еще не создан.'''
+
+        # Получаем проект из репозитория.
+        project = await self._project_repo.get_active_project_by_name_project(name_project)
+        return project
+
     async def get_all_active_projects(self) -> list[Project]:
         '''Возвращает все проекты. Если нет ни одного проекта (при первом
         обращении), то создает их.'''

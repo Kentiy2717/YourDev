@@ -9,7 +9,7 @@ from alembic import context
 
 from your_dev.core.config import settings
 from your_dev.core.database import Base
-from your_dev.models import users
+from your_dev.models import users, projects
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

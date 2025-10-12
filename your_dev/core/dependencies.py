@@ -3,12 +3,14 @@ from typing import TYPE_CHECKING
 from fastapi import Depends, HTTPException, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from your_dev.repositories.projects_repository import ProjectRepository
 from your_dev.repositories.users_repository import (
     AdminProfileRepository,
     UserRepository
 )
 from your_dev.core.database import get_async_db
 from your_dev.services.users_services import AdminProfileService
+from your_dev.services.project_services import ProjectService
 
 if TYPE_CHECKING:
     from your_dev.repositories.users_repository import (
@@ -23,6 +25,7 @@ if TYPE_CHECKING:
     )
 
 
+# РЕПОЗИТОРИИ
 def get_user_repository(
         db: AsyncSession = Depends(get_async_db)) -> UserRepository:
     return UserRepository(db)
@@ -33,11 +36,23 @@ def get_admin_profile_repository(
     return AdminProfileRepository(db)
 
 
+def get_project_repository(
+        db: AsyncSession = Depends(get_async_db)) -> ProjectRepository:
+    return ProjectRepository(db)
+
+
+# СЕРВИСЫ
 def get_admin_profile_service(
     user_repo: UserRepository = Depends(get_user_repository),
     profile_repo: AdminProfileRepository = Depends(get_admin_profile_repository)
 ) -> AdminProfileService:
     return AdminProfileService(user_repo, profile_repo)
+
+
+def get_project_service(
+        project_repo: UserRepository = Depends(get_project_repository)
+) -> ProjectService:
+    return ProjectService(project_repo)
 
 
 # def check_user_is_admin(current_user: User = Depends(get_current_user)) -> User:

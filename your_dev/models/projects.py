@@ -31,7 +31,7 @@ class Project(Base):
     __tablename__ = 'projects'
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name_project: Mapped[str] = mapped_column(String(100))
+    name_project: Mapped[str] = mapped_column(String(100), unique=True)
     title: Mapped[str] = mapped_column(unique=True)
     badge: Mapped[Badge] = mapped_column(default='ЛИЧНЫЙ ПРОЕКТ')
     description: Mapped[str]

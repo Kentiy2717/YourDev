@@ -6,15 +6,12 @@ from fastapi import (
     status
 )
 from fastapi.responses import HTMLResponse
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from your_dev.core.dependencies import get_admin_profile_service
+from your_dev.core.dependencies import get_project_service
 from your_dev.data import PROJECTS_DATA
 
 from your_dev.core import templates
-from your_dev.core.database import get_async_db
-from your_dev.services.users_services import AdminProfileService
+from your_dev.services.project_services import ProjectService
 # from your_dev.models.projects import Project as ProjectModel
 # from your_dev.schemas.projects_schemas import (
 #     ProjectCreate,
@@ -28,21 +25,19 @@ router = APIRouter(
 )
 
 
-@router.get('/{project_id}', response_class=HTMLResponse)
+@router.get('/{name_project}', response_class=HTMLResponse)
 async def project_detail(
     request: Request,
-    project_id: str,
-    profile_service: AdminProfileService = Depends(get_admin_profile_service)
+    name_project: str,
+    project_service: ProjectService = Depends(get_project_service)
 ):
-    project = PROJECTS_DATA.get(project_id)
-    profile_data = await profile_service.get_active_profile()
+    project = await project_service.get_active_project_by_name_project(name_project)
     if not project:
         return templates.TemplateResponse('404.html', {'request': request})
 
     return templates.TemplateResponse('project.html', {
         'request': request,
-        'project': project,
-        'profile': profile_data
+        'project': project
     })
 
 

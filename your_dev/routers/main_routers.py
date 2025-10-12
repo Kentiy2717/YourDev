@@ -8,16 +8,14 @@ from fastapi import (
 from fastapi.responses import HTMLResponse
 
 from your_dev.core import templates
-from your_dev.core.dependencies import get_admin_profile_service
-from your_dev.models.users import User as UserModel
-from your_dev.schemas.users_schemas import (
-    AdminProfileCreate,
-    User as UserSchema,
-    UserCreate
+from your_dev.core.dependencies import (
+    get_admin_profile_service,
+    get_project_service
 )
 
 from your_dev.data import PROJECTS_DATA, SERVICES_DATA
 from your_dev.services.users_services import AdminProfileService
+from your_dev.services.project_services import ProjectService
 
 
 router = APIRouter(
@@ -29,16 +27,18 @@ router = APIRouter(
 @router.get('/', response_class=HTMLResponse)
 async def home(
     request: Request,
-    profile_service: AdminProfileService = Depends(get_admin_profile_service)
+    profile_service: AdminProfileService = Depends(get_admin_profile_service),
+    project_service: ProjectService = Depends(get_project_service)
 ):
 
     '''Подготавливает данные для передачи на главную станицу админа.'''
 
     profile_data = await profile_service.get_active_profile()
+    active_projects = await project_service.get_all_active_projects()
     return templates.TemplateResponse('index.html', {
         'request': request,
         'profile': profile_data,
-        'projects': PROJECTS_DATA,
+        'projects': active_projects,
         'services': SERVICES_DATA
     })
 

@@ -65,7 +65,7 @@
         </h2>
         
         <div class='projects-grid'>
-            {% for project_id, project in projects.items() %}
+            {% for project in projects %}
             <div class='project-card cyber-card'>
                 <div class='card-badge {{ project.badge|lower }}'>{{ project.badge }}</div>
                 
@@ -95,7 +95,7 @@
                     <a href='{{ project.github_url }}' class='cyber-button small' target='_blank'>
                         <span class='btn-glitch'><i class='fab fa-github'></i> КОД</span>
                     </a>
-                    <a href='{{ url_for("project_detail", project_id=project_id) }}' class='cyber-button small primary'>
+                    <a href='{{ url_for("project_detail", name_project=project.name_project) }}' class='cyber-button small primary'>
                         <span class='btn-glitch'>ПОДРОБНЕЕ</span>
                     </a>
                 </div>

@@ -67,19 +67,20 @@ class InitializationService:
             )
             logger.info('✅ Стартовый профиль создан успешно.')
         else:
-            logger.info('💡 Профили уже существуют.')
+            logger.info('💡 Профиль уже существует.')
 
     async def create_projects_if_not_exist(self) -> None:
         '''Создает начальные проекты админа, если их нет.'''
 
-        projects = await self._project_repo.get_all_projects()
-        if not projects:
-
-            for project_data in INITIAL_PROJECTS_DATA:
+        for project_data in INITIAL_PROJECTS_DATA:
+            project = await self._project_repo.get_by_name_project(
+                name_project=project_data['name_project']
+            )
+            if not project:
 
                 # Создаем стартовые проекты.
                 await self._project_repo.create_project(
-                    profile_data=dict(
+                    project_data=dict(
                         name_project=project_data['name_project'],
                         title=project_data['title'],
                         badge=project_data['badge'],
@@ -97,12 +98,19 @@ class InitializationService:
                     )
                 )
                 logger.info(
-                    f'✅ Стартовый проект ({INITIAL_PROJECTS_DATA['title']}) '
+                    f'✅ Стартовые проект ({project_data['title']}) '
                     'успешно создан.'
                 )
-        else:
-            logger.info('💡 Стартовый проекты уже существуют.')
+            else:
+                logger.info(
+                    f'💡 Стартовый проект {project_data['title']} '
+                    'уже существует.'
+                )
 
     async def create_services_if_not_exist(self) -> None:
         '''Создает начальные проекты админа, если их нет.'''
         pass
+
+    async def delete_all_projects(self) -> None:
+        '''Для наладки.'''
+        await self._project_repo.delete_all_project()
