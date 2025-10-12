@@ -5,6 +5,8 @@ from your_dev.core.database import Base
 
 
 class Service(Base):
+    '''Модель услуг админа.'''
+
     __tablename__ = 'services'
 
     id: Mapped[int] = mapped_column(primary_key=True)

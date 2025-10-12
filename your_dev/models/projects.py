@@ -1,12 +1,10 @@
 from datetime import datetime
-from sqlalchemy import JSON, ForeignKey, SmallInteger, String
+from sqlalchemy import JSON, SmallInteger, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from your_dev.core.database import Base
 
-from typing import TYPE_CHECKING, Literal
-if TYPE_CHECKING:
-    pass
+from typing import Literal
 
 Badge = Literal[
     'УЧЕБНЫЙ',
@@ -28,6 +26,8 @@ ComplexityLevel = Literal[1, 2, 3, 4, 5]
 
 
 class Project(Base):
+    '''Модель проектов админа.'''
+
     __tablename__ = 'projects'
 
     id: Mapped[int] = mapped_column(primary_key=True)

@@ -6,8 +6,6 @@ from fastapi import (
     status
 )
 from fastapi.responses import HTMLResponse
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from your_dev.core.dependencies import get_service_service
 from your_dev.core import templates

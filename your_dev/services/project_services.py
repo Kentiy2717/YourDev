@@ -31,7 +31,6 @@ class ProjectService:
     async def create_project(self, project_data: ProjectCreate) -> Project:
         '''Cоздает проект. Используется в админке.'''
 
-        # Проверка что project - project (РАЗКОМЕНТИТЬ, КОГДА СДЕЛАЮ АВТОРИЗАЦИЮ)
-        # await self._validate_project_role(project_id=project_id)
+        # Нужно добавить валидацию
         new_project = await self._project_repo.create_project(project_data)
         return new_project

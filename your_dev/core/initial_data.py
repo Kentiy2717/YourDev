@@ -128,6 +128,7 @@ INITIAL_SERVICES_DATA = [
             'Аутентификация и авторизация',
             'Тестирование и документация'
         ],
+        'process': [],
         'technologies': ['Python', 'FastAPI/Flask/Django', 'SQLAlchemy'],
         'cta': 'Нужен бэкенд?',
         'icon': 'fas fa-server',
@@ -144,6 +145,7 @@ INITIAL_SERVICES_DATA = [
             'Автоматизация отчетности',
             'Интеграция с Google Sheets'
         ],
+        'process': [],
         'technologies': ['Python', 'aiohttp', 'BeautifulSoup', 'aiogram'],
         'cta': 'Автоматизировать',
         'icon': 'fas fa-robot',
@@ -160,6 +162,7 @@ INITIAL_SERVICES_DATA = [
             'Интеграция новых сервисов',
             'Техническая поддержка'
         ],
+        'process': [],
         'technologies': ['Python', 'FastAPI', 'Django', 'Flask'],
         'cta': 'Улучшить проект',
         'icon': 'fas fa-cog',

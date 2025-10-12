@@ -13,7 +13,7 @@ class Settings(BaseSettings):
 
     DATABASE_URL: str = os.getenv('DATABASE_URL')
     SECRET_KEY: str = os.getenv('SECRET_KEY')
-    ALGORITHM: str = 'HS256'
+    ALGORITHM: str = os.getenv('HS256')
 
     ACCESS_TOKEN_EXPIRE_MINUTES: int = os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES')
     REFRESH_TOKEN_EXPIRE_DAYS: int = os.getenv('REFRESH_TOKEN_EXPIRE_DAYS')

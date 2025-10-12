@@ -5,6 +5,8 @@ from your_dev.models.services import Service
 
 
 class ServiceRepository:
+    '''Репозиторий для работы с услугами админа.'''
+
     def __init__(self, db: AsyncSession):
         self.db = db
 
@@ -19,8 +21,9 @@ class ServiceRepository:
     async def get_all_active_services(self) -> list[Service]:
         '''Возвращает все активные услуги.'''
 
-        services_query = await self.db.scalars(select(Service)
-                                               .where(Service.is_active))
+        services_query = await self.db.scalars(
+            select(Service).where(Service.is_active)
+        )
         return services_query.all()
 
     async def get_all_services(self) -> list[Service]:
@@ -38,7 +41,7 @@ class ServiceRepository:
         await self.db.refresh(service)
         return service
 
-    async def delete_project(self, title: str) -> None:
+    async def delete_service(self, title: str) -> None:
         '''Логическое удаление проекта.'''
 
         service = await self.db.scalar(

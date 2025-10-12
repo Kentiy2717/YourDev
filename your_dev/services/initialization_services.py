@@ -127,7 +127,7 @@ class InitializationService:
                         description=service_data['description'],
                         price=service_data['price'],
                         features=service_data['features'],
-                        process=service_data['process'],
+                        process=service_data.get('process', []),
                         technologies=service_data['technologies'],
                         cta=service_data['cta'],
                         icon=service_data['icon'],
@@ -136,15 +136,15 @@ class InitializationService:
                     )
                 )
                 logger.info(
-                    f'✅ Стартовые проект ({service_data['title']}) '
-                    'успешно создан.'
+                    f'✅ Стартовая услуга ({service_data['title']}) '
+                    'успешно создана.'
                 )
             else:
                 logger.info(
-                    f'💡 Стартовый проект {service_data['title']} '
+                    f'💡 Стартовая услуга {service_data['title']} '
                     'уже существует.'
                 )
 
     async def delete_all_projects(self) -> None:
-        '''Для наладки.'''
+        '''Для отладки.'''
         await self._project_repo.delete_all_project()

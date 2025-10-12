@@ -8,15 +8,9 @@ from fastapi import (
 from fastapi.responses import HTMLResponse
 
 from your_dev.core.dependencies import get_project_service
-from your_dev.data import PROJECTS_DATA
 
 from your_dev.core import templates
 from your_dev.services.project_services import ProjectService
-# from your_dev.models.projects import Project as ProjectModel
-# from your_dev.schemas.projects_schemas import (
-#     ProjectCreate,
-#     Project as ProjectSchema
-# )
 
 
 router = APIRouter(

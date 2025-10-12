@@ -5,6 +5,8 @@ from your_dev.models.projects import Project
 
 
 class ProjectRepository:
+    '''Репозиторий для работы с профилями админа.'''
+
     def __init__(self, db: AsyncSession):
         self.db = db
 
@@ -37,8 +39,9 @@ class ProjectRepository:
     async def get_all_active_projects(self) -> list[Project]:
         '''Возвращает все активные проекты.'''
 
-        projects_query = await self.db.scalars(select(Project)
-                                               .where(Project.is_active))
+        projects_query = await self.db.scalars(
+            select(Project).where(Project.is_active)
+        )
         return projects_query.all()
 
     async def get_all_projects(self) -> list[Project]:

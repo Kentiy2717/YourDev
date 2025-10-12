@@ -1,5 +1,3 @@
-'''Прочие зависимости'''
-from typing import TYPE_CHECKING
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -13,12 +11,6 @@ from your_dev.core.database import get_async_db
 from your_dev.services.service_services import ServiceService
 from your_dev.services.users_services import AdminProfileService
 from your_dev.services.project_services import ProjectService
-
-if TYPE_CHECKING:
-    from your_dev.repositories.users_repository import (
-        AdminProfileRepository,
-        UserRepository
-    )
 
 
 # РЕПОЗИТОРИИ
@@ -39,7 +31,7 @@ def get_project_repository(
 
 def get_service_repository(
         db: AsyncSession = Depends(get_async_db)) -> ServiceRepository:
-    return ProjectRepository(db)
+    return ServiceRepository(db)
 
 
 # СЕРВИСЫ
