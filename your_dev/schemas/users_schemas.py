@@ -44,6 +44,12 @@ class UserCreate(BaseModel):
     )
 
 
+class UserLogin(BaseModel):
+    '''Модель для входа пользователя'''
+    email: EmailStr = Field(description='Email пользователя')
+    password: SecretStr = Field(description='Пароль')
+
+
 class AdminProfile(BaseModel):
     name_for_index: str = Field(description='Имя для отображения на главной странице')
     title: str = Field(description='Заголовок')

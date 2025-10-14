@@ -1,6 +1,7 @@
-from fastapi import Depends
+from fastapi import Depends, HTTPException, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from your_dev.models.users import User
 from your_dev.repositories.projects_repository import ProjectRepository
 from your_dev.repositories.service_repository import ServiceRepository
 from your_dev.repositories.users_repository import (
@@ -9,49 +10,79 @@ from your_dev.repositories.users_repository import (
 )
 from your_dev.core.database import get_async_db
 from your_dev.services.service_services import ServiceService
-from your_dev.services.users_services import AdminProfileService
+from your_dev.services.users_services import AdminProfileService, UserService
 from your_dev.services.project_services import ProjectService
 
 
 # РЕПОЗИТОРИИ
-def get_user_repository(
+async def get_user_repository(
         db: AsyncSession = Depends(get_async_db)) -> UserRepository:
     return UserRepository(db)
 
 
-def get_admin_profile_repository(
+async def get_admin_profile_repository(
         db: AsyncSession = Depends(get_async_db)) -> AdminProfileRepository:
     return AdminProfileRepository(db)
 
 
-def get_project_repository(
+async def get_project_repository(
         db: AsyncSession = Depends(get_async_db)) -> ProjectRepository:
     return ProjectRepository(db)
 
 
-def get_service_repository(
+async def get_service_repository(
         db: AsyncSession = Depends(get_async_db)) -> ServiceRepository:
     return ServiceRepository(db)
 
 
 # СЕРВИСЫ
-def get_admin_profile_service(
+async def get_admin_profile_service(
     user_repo: UserRepository = Depends(get_user_repository),
     profile_repo: AdminProfileRepository = Depends(get_admin_profile_repository)
 ) -> AdminProfileService:
     return AdminProfileService(user_repo, profile_repo)
 
 
-def get_project_service(
+async def get_user_service(
+    user_repo: UserRepository = Depends(get_user_repository),
+) -> UserService:
+    return UserService(user_repo)
+
+
+async def get_project_service(
         project_repo: ProjectRepository = Depends(get_project_repository)
 ) -> ProjectService:
     return ProjectService(project_repo)
 
 
-def get_service_service(
+async def get_service_service(
         service_repo: ServiceRepository = Depends(get_service_repository)
 ) -> ServiceService:
     return ServiceService(service_repo)
+
+
+# Зависимость для получения текущего пользователя из сессии
+async def get_current_user(
+    request: Request,
+    user_service: UserService = Depends(get_user_service)
+) -> User:
+    '''Получает текущего пользователя из сессии'''
+
+    user_id = request.session.get('user_id')
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail='Не авторизован'
+        )
+
+    user = await user_service.get_user_by_id(user_id)
+    if not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail='Пользователь деактивирован'
+        )
+
+    return user
 
 
 # def check_user_is_admin(current_user: User = Depends(get_current_user)) -> User:

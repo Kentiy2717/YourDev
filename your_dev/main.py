@@ -1,8 +1,10 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from starlette.middleware.sessions import SessionMiddleware
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.exc import SQLAlchemyError
 
+from your_dev.core.config import settings
 from your_dev.core.database import async_session_maker
 from your_dev.core.logger import logger
 from your_dev.repositories.service_repository import ServiceRepository
@@ -64,9 +66,16 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+# Добавьте middleware для сессий
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=settings.SECRET_KEY,  # Замените на случайный секретный ключ
+    max_age=3600  # Время жизни сессии в секундах
+)
+
 app.mount('/static', StaticFiles(directory='your_dev/static'), name='static')
 
-# app.include_router(auth_routers.router)
+app.include_router(auth_routers.router)
 app.include_router(projects_routers.router)
 app.include_router(services_routers.router)
 app.include_router(main_routers.router)

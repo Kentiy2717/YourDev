@@ -11,7 +11,7 @@ from sqlalchemy.orm import DeclarativeBase
 from your_dev.core.config import settings
 from your_dev.core.logger import logger
 
-async_engine = create_async_engine(settings.DATABASE_URL, echo=True)
+async_engine = create_async_engine(settings.DATABASE_URL)
 
 async_session_maker = async_sessionmaker(
     async_engine,

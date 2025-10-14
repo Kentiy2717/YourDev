@@ -1,6 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from your_dev.core.auth import hash_password, verify_password
 from your_dev.models.users import AdminProfile, User
 
 
@@ -15,6 +16,13 @@ class UserRepository:
 
         user = await self.db.scalar(
             select(User).where(User.email == email, User.is_active)
+        )
+        return user
+
+    async def get_by_id(self, user_id: int) -> User | None:
+        '''Возвращает пользователя по ID'''
+        user = await self.db.scalar(
+            select(User).where(User.id == user_id, User.is_active)
         )
         return user
 
@@ -35,10 +43,22 @@ class UserRepository:
     async def create_user(self, user_data: dict) -> User:
         '''Создает пользователя.'''
 
+        # Хешируем пароль перед сохранением
+        if 'password' in user_data:
+            user_data['password'] = hash_password(user_data['password'])
+
         user = User(**user_data)
         self.db.add(user)
         await self.db.commit()
         await self.db.refresh(user)
+        return user
+
+    async def authenticate_user(self, email: str, password: str) -> User | None:
+        '''Аутентификация пользователя'''
+        user = await self.get_by_email(email)
+        if not user or not verify_password(plain_password=password,
+                                           hashed_password=user.password):
+            return None
         return user
 
 

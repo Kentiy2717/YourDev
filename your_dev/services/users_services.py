@@ -5,6 +5,7 @@
 автора в данный момент времени. Можно всегда создать обновление (новая строка),
 а также вернуть данные из старых записей.
 '''
+from fastapi import HTTPException, status
 from your_dev.repositories.users_repository import (
     AdminProfileRepository,
     UserRepository
@@ -27,6 +28,40 @@ class UserService:
 
         admin = await self._user_repo.get_admin()
         return admin
+
+    async def register_user(self, user_data: dict) -> User:
+        '''Регистрация нового пользователя'''
+
+        # Проверяем, не существует ли уже пользователь с таким email
+        existing_user = await self._user_repo.get_by_email(user_data['email'])
+        if existing_user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Пользователь с таким email уже существует"
+            )
+        return await self._user_repo.create_user(user_data)
+
+    async def authenticate_user(self, email: str, password: str) -> User:
+        '''Аутентификация пользователя'''
+
+        user = await self._user_repo.authenticate_user(email, password)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Неверный email или пароль"
+            )
+        return user
+
+    async def get_user_by_id(self, user_id: int) -> User:
+        '''Получение пользователя по ID'''
+
+        user = await self._user_repo.get_by_id(user_id)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Пользователь не найден"
+            )
+        return user
 
 
 class AdminProfileService:
