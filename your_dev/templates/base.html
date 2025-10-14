@@ -9,7 +9,7 @@
     <meta name="keywords" content="{% block keywords %}python разработчик, fastapi, django, flask, веб-приложения, разработка под ключ{% endblock %}">
     <meta property="og:title" content="{% block og_title %}Python Full-Stack Developer | ИННОКЕНТИЙ МОТРИЙ{% endblock %}">
     <meta property="og:description" content="{% block og_description %}Создаю работающие решения на Python. FastAPI, Django, Flask разработка.{% endblock %}">
-    <meta property="og:image" content="{% block og_image %}{{ url_for('static', path='/images/og-image.jpg') }}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ "/static/images/og-image.jpg" }}{% endblock %}">
     <meta property="og:url" content="https://your-dev.ru">
     <meta property="og:type" content="website">
 
@@ -32,7 +32,7 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>">
     <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css' rel='stylesheet'>
     <link href='https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap' rel='stylesheet'>
-    <link href='{{ url_for("static", path="/css/style.css") }}' rel='stylesheet'>
+    <link href="/static/css/style.css" rel='stylesheet'>
 </head>
 <body>
     <div class='cyber-grid'></div>
@@ -47,6 +47,6 @@
     {% include 'footer.html' %}
     
     <script src='https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js'></script>
-    <script src='{{ url_for("static", path="/js/script.js") }}'></script>
+    <script src="/static/js/script.js"></script>
 </body>
 </html>

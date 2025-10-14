@@ -102,12 +102,12 @@ class InitializationService:
                     )
                 )
                 logger.info(
-                    f'✅ Стартовые проект ({project_data['title']}) '
+                    f'✅ Стартовые проект ({project_data["title"]}) '
                     'успешно создан.'
                 )
             else:
                 logger.info(
-                    f'💡 Стартовый проект {project_data['title']} '
+                    f'💡 Стартовый проект {project_data["title"]} '
                     'уже существует.'
                 )
 
@@ -136,12 +136,12 @@ class InitializationService:
                     )
                 )
                 logger.info(
-                    f'✅ Стартовая услуга ({service_data['title']}) '
+                    f'✅ Стартовая услуга ({service_data["title"]}) '
                     'успешно создана.'
                 )
             else:
                 logger.info(
-                    f'💡 Стартовая услуга {service_data['title']} '
+                    f'💡 Стартовая услуга {service_data["title"]} '
                     'уже существует.'
                 )
 
