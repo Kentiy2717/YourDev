@@ -14,8 +14,8 @@ from your_dev.core.dependencies import (
     get_admin_profile_service,
     get_project_service,
     get_service_service,
-    get_db,
-    get_current_user  # Добавляем зависимость для получения текущего пользователя
+    get_current_user,
+    get_user_service  # Добавляем зависимость для получения текущего пользователя
 )
 from your_dev.services.service_services import ServiceService
 from your_dev.services.users_services import AdminProfileService
@@ -54,8 +54,8 @@ async def home(
 async def login_page(request: Request):
     '''Страница входа'''
     # Если пользователь уже авторизован, редирект на главную
-    if request.session.get("user_id"):
-        return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
+    if request.session.get('user_id'):
+        return RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)
     
     return templates.TemplateResponse('login.html', {
         'request': request
@@ -73,10 +73,10 @@ async def login(
         user = await user_service.authenticate_user(email, password)
         
         # Сохраняем user_id в сессии
-        request.session["user_id"] = user.id
+        request.session['user_id'] = user.id
         
         # Редирект на главную после успешного входа
-        return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
+        return RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)
         
     except HTTPException:
         # В случае ошибки возвращаем на страницу входа с сообщением об ошибке
@@ -89,8 +89,8 @@ async def login(
 async def register_page(request: Request):
     '''Страница регистрации'''
     # Если пользователь уже авторизован, редирект на главную
-    if request.session.get("user_id"):
-        return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
+    if request.session.get('user_id'):
+        return RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)
     
     return templates.TemplateResponse('register.html', {
         'request': request
@@ -119,10 +119,10 @@ async def register(
         user = await user_service.register_user(user_data)
         
         # Автоматически логиним пользователя после регистрации
-        request.session["user_id"] = user.id
+        request.session['user_id'] = user.id
         
         # Редирект на главную после успешной регистрации
-        return RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
+        return RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)
         
     except HTTPException as e:
         # В случае ошибки возвращаем на страницу регистрации с сообщением об ошибке
@@ -135,10 +135,10 @@ async def register(
 async def logout(request: Request):
     '''Выход пользователя'''
     # Удаляем user_id из сессии
-    request.session.pop("user_id", None)
+    request.session.pop('user_id', None)
     
     # Редирект на страницу входа после выхода
-    return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
+    return RedirectResponse(url='/login', status_code=status.HTTP_302_FOUND)
 
 # Защищенные роуты - требуют аутентификации
 @router.get('/profile', response_class=HTMLResponse)
@@ -170,22 +170,6 @@ async def dashboard(
         'projects': active_projects,
         'current_user': current_user
     })
-
-# Middleware для проверки аутентификации на защищенных страницах
-@router.middleware("http")
-async def auth_middleware(request: Request, call_next):
-    '''Промежуточное ПО для проверки аутентификации'''
-    
-    # Список путей, которые требуют аутентификации
-    protected_paths = ['/', '/profile', '/dashboard']
-    
-    # Если запрос к защищенному пути и пользователь не аутентифицирован
-    if any(request.url.path.startswith(path) for path in protected_paths):
-        if not request.session.get("user_id"):
-            return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
-    
-    response = await call_next(request)
-    return response
 
 
 

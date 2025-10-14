@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Дашборд</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
+        .nav { margin-bottom: 30px; }
+        .nav a { margin-right: 15px; text-decoration: none; color: #007bff; }
+        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: #f8f9fa; padding: 20px; border-radius: 5px; text-align: center; }
+        .projects { margin-top: 30px; }
+        .project-item { border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 5px; }
+        .logout-form { margin-top: 20px; }
+        button { padding: 8px 15px; background: #dc3545; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="/">Главная</a>
+        <a href="/dashboard">Дашборд</a>
+        <a href="/profile">Профиль</a>
+    </div>
+    
+    <h2>Дашборд</h2>
+    
+    <div class="stats">
+        <div class="stat-card">
+            <h3>Проекты</h3>
+            <p>{{ projects|length }} активных</p>
+        </div>
+        <div class="stat-card">
+            <h3>Профиль</h3>
+            <p>{% if profile %}Настроен{% else %}Не настроен{% endif %}</p>
+        </div>
+    </div>
+    
+    <div class="projects">
+        <h3>Активные проекты</h3>
+        {% if projects %}
+            {% for project in projects %}
+            <div class="project-item">
+                <h4>Проект #{{ loop.index }}</h4>
+                <p>Детали проекта будут здесь</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>Нет активных проектов</p>
+        {% endif %}
+    </div>
+    
+    <form class="logout-form" method="post" action="/logout">
+        <button type="submit">Выйти</button>
+    </form>
+</body>
+</html>
