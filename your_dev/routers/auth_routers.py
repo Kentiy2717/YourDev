@@ -7,59 +7,37 @@ from fastapi import (
     Form
 )
 from fastapi.responses import HTMLResponse, RedirectResponse
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from your_dev.core import templates
 from your_dev.core.dependencies import (
     get_admin_profile_service,
     get_project_service,
-    get_service_service,
     get_current_user,
-    get_user_service  # Добавляем зависимость для получения текущего пользователя
+    get_user_service
 )
-from your_dev.services.service_services import ServiceService
+from your_dev.models.users import User
 from your_dev.services.users_services import AdminProfileService
 from your_dev.services.project_services import ProjectService
-from your_dev.repositories.users_repository import UserRepository
 from your_dev.services.users_services import UserService
 
 router = APIRouter(
     prefix='',
-    tags=['web'],
+    tags=['auth'],
 )
 
-@router.get('/', response_class=HTMLResponse)
-async def home(
-    request: Request,
-    profile_service: AdminProfileService = Depends(get_admin_profile_service),
-    project_service: ProjectService = Depends(get_project_service),
-    service_service: ServiceService = Depends(get_service_service),
-    current_user = Depends(get_current_user)  # Проверяем аутентификацию
-):
-    '''Главная страница - доступна только аутентифицированным пользователям'''
-    
-    profile_data = await profile_service.get_active_profile()
-    active_projects = await project_service.get_all_active_projects()
-    service_data = await service_service.get_all_active_services()
-    
-    return templates.TemplateResponse('index.html', {
-        'request': request,
-        'profile': profile_data,
-        'projects': active_projects,
-        'services': service_data,
-        'current_user': current_user  # Передаем пользователя в шаблон
-    })
 
 @router.get('/login', response_class=HTMLResponse)
 async def login_page(request: Request):
     '''Страница входа'''
+
     # Если пользователь уже авторизован, редирект на главную
     if request.session.get('user_id'):
         return RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)
-    
-    return templates.TemplateResponse('login.html', {
+
+    return templates.TemplateResponse('auth/login.html', {
         'request': request
     })
+
 
 @router.post('/login')
 async def login(
@@ -69,21 +47,21 @@ async def login(
     user_service: UserService = Depends(get_user_service)
 ):
     '''Обработка формы входа'''
-    try:
-        user = await user_service.authenticate_user(email, password)
-        
-        # Сохраняем user_id в сессии
-        request.session['user_id'] = user.id
-        
-        # Редирект на главную после успешного входа
-        return RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)
-        
-    except HTTPException:
-        # В случае ошибки возвращаем на страницу входа с сообщением об ошибке
-        return templates.TemplateResponse('login.html', {
-            'request': request,
-            'error': 'Неверный email или пароль'
-        })
+
+    user = await user_service.authenticate_user(email, password)
+
+    if not user:
+        return templates.TemplateResponse(
+            "auth/login.html",
+            {
+                "request": request,
+                "error": "Неверный email или пароль"
+            },
+            status_code=401
+        )
+    request.session['user_id'] = user.id
+    return RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)
+
 
 @router.get('/register', response_class=HTMLResponse)
 async def register_page(request: Request):
@@ -91,8 +69,8 @@ async def register_page(request: Request):
     # Если пользователь уже авторизован, редирект на главную
     if request.session.get('user_id'):
         return RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)
-    
-    return templates.TemplateResponse('register.html', {
+
+    return templates.TemplateResponse('auth/register.html', {
         'request': request
     })
 
@@ -131,40 +109,40 @@ async def register(
             'error': e.detail
         })
 
-@router.post('/logout')
+
+@router.get('/logout')
 async def logout(request: Request):
     '''Выход пользователя'''
-    # Удаляем user_id из сессии
-    request.session.pop('user_id', None)
-    
-    # Редирект на страницу входа после выхода
-    return RedirectResponse(url='/login', status_code=status.HTTP_302_FOUND)
 
-# Защищенные роуты - требуют аутентификации
+    request.session.pop('user_id', None)
+    return RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)
+
+
 @router.get('/profile', response_class=HTMLResponse)
 async def profile_page(
     request: Request,
-    current_user = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     '''Страница профиля пользователя'''
-    return templates.TemplateResponse('profile.html', {
+    return templates.TemplateResponse('users/profile.html', {
         'request': request,
         'current_user': current_user
     })
 
-@router.get('/dashboard', response_class=HTMLResponse)
-async def dashboard(
+
+@router.get('/orders', response_class=HTMLResponse)
+async def orders(
     request: Request,
-    current_user = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
     profile_service: AdminProfileService = Depends(get_admin_profile_service),
     project_service: ProjectService = Depends(get_project_service)
 ):
-    '''Дашборд - доступен только аутентифицированным пользователям'''
-    
+    '''Заказы - доступен только аутентифицированным пользователям'''
+
     profile_data = await profile_service.get_active_profile()
     active_projects = await project_service.get_all_active_projects()
-    
-    return templates.TemplateResponse('dashboard.html', {
+
+    return templates.TemplateResponse('users/orders.html', {
         'request': request,
         'profile': profile_data,
         'projects': active_projects,

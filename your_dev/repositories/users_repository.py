@@ -12,7 +12,7 @@ class UserRepository:
         self.db = db
 
     async def get_by_email(self, email: str) -> User | None:
-        '''Возвращает пользователя по его email.'''
+        '''Возвращает пользователя по его email, если он есть.'''
 
         user = await self.db.scalar(
             select(User).where(User.email == email, User.is_active)
@@ -20,7 +20,7 @@ class UserRepository:
         return user
 
     async def get_by_id(self, user_id: int) -> User | None:
-        '''Возвращает пользователя по ID'''
+        '''Возвращает пользователя по ID, если он есть.'''
         user = await self.db.scalar(
             select(User).where(User.id == user_id, User.is_active)
         )
@@ -54,7 +54,8 @@ class UserRepository:
         return user
 
     async def authenticate_user(self, email: str, password: str) -> User | None:
-        '''Аутентификация пользователя'''
+        '''Возвращает с таким email и паролем, либо None'''
+
         user = await self.get_by_email(email)
         if not user or not verify_password(plain_password=password,
                                            hashed_password=user.password):

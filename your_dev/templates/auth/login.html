@@ -1,0 +1,41 @@
+{% extends "includes/base.html" %}
+
+{% block title %}Вход в систему | YOUR DEV{% endblock %}
+{% block description %}Войдите в свой аккаунт YOUR DEV. Доступ к проектам и настройкам.{% endblock %}
+
+{% block content %}
+<section class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1 class="auth-title glitch" data-text="🔐 ВХОД">🔐 ВХОД</h1>
+            <p class="auth-subtitle">Войдите в свой аккаунт разработчика</p>
+        </div>
+
+        {% if error %}
+        <div class="error-message">
+            <i class="fas fa-exclamation-triangle"></i> {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="post" class="auth-form">
+            <div class="form-group">
+                <label for="email" class="form-label">EMAIL</label>
+                <input type="email" id="email" name="email" class="form-input" placeholder="your@email.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">ПАРОЛЬ</label>
+                <input type="password" id="password" name="password" class="form-input" placeholder="Введите ваш пароль" required>
+            </div>
+
+            <button type="submit" class="cyber-button primary auth-button">
+                <span class="btn-glitch"><i class="fas fa-sign-in-alt"></i> ВОЙТИ В СИСТЕМУ</span>
+            </button>
+        </form>
+
+        <div class="auth-links">
+            <p>Нет аккаунта? <a href="/register" class="auth-link">ЗАРЕГИСТРИРОВАТЬСЯ</a></p>
+        </div>
+    </div>
+</section>
+{% endblock %}

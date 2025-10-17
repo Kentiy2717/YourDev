@@ -1,6 +1,9 @@
 from fastapi import Depends, HTTPException, Request, status
+from fastapi.responses import RedirectResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from your_dev.core import templates
+from your_dev.core.database import get_async_db
 from your_dev.models.users import User
 from your_dev.repositories.projects_repository import ProjectRepository
 from your_dev.repositories.service_repository import ServiceRepository
@@ -8,7 +11,6 @@ from your_dev.repositories.users_repository import (
     AdminProfileRepository,
     UserRepository
 )
-from your_dev.core.database import get_async_db
 from your_dev.services.service_services import ServiceService
 from your_dev.services.users_services import AdminProfileService, UserService
 from your_dev.services.project_services import ProjectService
@@ -61,7 +63,6 @@ async def get_service_service(
     return ServiceService(service_repo)
 
 
-# Зависимость для получения текущего пользователя из сессии
 async def get_current_user(
     request: Request,
     user_service: UserService = Depends(get_user_service)
@@ -70,17 +71,11 @@ async def get_current_user(
 
     user_id = request.session.get('user_id')
     if not user_id:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='Не авторизован'
-        )
+        return None
 
     user = await user_service.get_user_by_id(user_id)
     if not user.is_active:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='Пользователь деактивирован'
-        )
+        return None
 
     return user
 

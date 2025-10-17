@@ -1,9 +1,7 @@
 from fastapi import (
     APIRouter,
     Depends,
-    HTTPException,
     Request,
-    status
 )
 from fastapi.responses import HTMLResponse
 
@@ -27,9 +25,9 @@ async def project_detail(
 ):
     project = await project_service.get_active_project_by_name_project(name_project)
     if not project:
-        return templates.TemplateResponse('404.html', {'request': request})
+        return templates.TemplateResponse('error_page/404.html', {'request': request})
 
-    return templates.TemplateResponse('project.html', {
+    return templates.TemplateResponse('main/project.html', {
         'request': request,
         'project': project
     })

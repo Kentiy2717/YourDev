@@ -17,6 +17,15 @@
             <li><a href='/services' class='nav-link cyber-button'>
                 <span class='btn-glitch'>УСЛУГИ</span>
             </a></li>
+            {% if request.session.user_id %}
+                <li><a href='/orders' class='nav-link cyber-button'>
+                    <span class='btn-glitch'>ПРОФИЛЬ</span>
+                </a></li>
+            {% else %}
+                <li><a href='/login' class='nav-link cyber-button'>
+                    <span class='btn-glitch'>ВОЙТИ</span>
+                </a></li>
+            {% endif %}
             <li><a href='#contact' class='nav-link cyber-button primary'>
                 <span class='btn-glitch'>НАПИШИ МНЕ</span>
             </a></li>

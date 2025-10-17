@@ -38,7 +38,7 @@ async def home(
     profile_data = await profile_service.get_active_profile()
     active_projects = await project_service.get_all_active_projects()
     service_data = await service_service.get_all_active_services()
-    return templates.TemplateResponse('index.html', {
+    return templates.TemplateResponse('main/index.html', {
         'request': request,
         'profile': profile_data,
         'projects': active_projects,

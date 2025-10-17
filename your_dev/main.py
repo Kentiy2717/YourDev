@@ -66,10 +66,9 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Добавьте middleware для сессий
 app.add_middleware(
     SessionMiddleware,
-    secret_key=settings.SECRET_KEY,  # Замените на случайный секретный ключ
+    secret_key=settings.SECRET_KEY,
     max_age=3600  # Время жизни сессии в секундах
 )
 
@@ -81,8 +80,8 @@ app.include_router(services_routers.router)
 app.include_router(main_routers.router)
 
 
-@app.get('/')
+@app.get('/welcome')
 async def root():
-    '''Корневой маршрут, подтверждающий, что API работает.'''
+    '''Mаршрут, подтверждающий, что API работает.'''
 
     return {'message': 'Добро пожаловать в API сервиса YourDev!'}

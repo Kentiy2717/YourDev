@@ -23,6 +23,12 @@ class UserService:
     def __init__(self, user_repo: UserRepository):
         self._user_repo = user_repo
 
+    async def get_user_by_id(self, user_id: int) -> User:
+        '''Получение пользователя по ID.'''
+
+        user = await self._user_repo.get_by_id(user_id)
+        return user
+
     async def get_admin(self) -> User:
         '''Возвращает пользователся с ролью "admin"'''
 
@@ -31,7 +37,7 @@ class UserService:
 
     async def register_user(self, user_data: dict) -> User:
         '''Регистрация нового пользователя'''
-
+####
         # Проверяем, не существует ли уже пользователь с таким email
         existing_user = await self._user_repo.get_by_email(user_data['email'])
         if existing_user:
@@ -41,27 +47,12 @@ class UserService:
             )
         return await self._user_repo.create_user(user_data)
 
-    async def authenticate_user(self, email: str, password: str) -> User:
-        '''Аутентификация пользователя'''
+    async def authenticate_user(self, email: str, password: str) -> User | None:
+        '''Аутентификация пользователя.'''
 
         user = await self._user_repo.authenticate_user(email, password)
-        if not user:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Неверный email или пароль"
-            )
-        return user
-
-    async def get_user_by_id(self, user_id: int) -> User:
-        '''Получение пользователя по ID'''
-
-        user = await self._user_repo.get_by_id(user_id)
-        if not user:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Пользователь не найден"
-            )
-        return user
+        if user.is_active:
+            return user
 
 
 class AdminProfileService:

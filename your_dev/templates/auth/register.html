@@ -1,0 +1,56 @@
+{% extends "includes/base.html" %}
+
+{% block title %}Регистрация | YOUR DEV{% endblock %}
+{% block description %}Создайте аккаунт в YOUR DEV. Присоединяйтесь к сообществу разработчиков.{% endblock %}
+
+{% block content %}
+<section class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1 class="auth-title glitch" data-text="🚀 РЕГИСТРАЦИЯ">🚀 РЕГИСТРАЦИЯ</h1>
+            <p class="auth-subtitle">Создайте свой аккаунт разработчика</p>
+        </div>
+
+        {% if error %}
+        <div class="error-message">
+            <i class="fas fa-exclamation-triangle"></i> {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="post" class="auth-form">
+            <div class="form-group">
+                <label for="email" class="form-label">EMAIL</label>
+                <input type="email" id="email" name="email" class="form-input" placeholder="your@email.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">ПАРОЛЬ</label>
+                <input type="password" id="password" name="password" class="form-input" placeholder="Минимум 8 символов" required minlength="8">
+            </div>
+
+            <div class="form-group">
+                <label for="first_name" class="form-label">ИМЯ</label>
+                <input type="text" id="first_name" name="first_name" class="form-input" placeholder="Ваше имя" required>
+            </div>
+
+            <div class="form-group">
+                <label for="last_name" class="form-label">ФАМИЛИЯ</label>
+                <input type="text" id="last_name" name="last_name" class="form-input" placeholder="Ваша фамилия">
+            </div>
+
+            <div class="form-group">
+                <label for="middle_name" class="form-label">ОТЧЕСТВО</label>
+                <input type="text" id="middle_name" name="middle_name" class="form-input" placeholder="Ваше отчество">
+            </div>
+
+            <button type="submit" class="cyber-button primary auth-button">
+                <span class="btn-glitch"><i class="fas fa-user-plus"></i> СОЗДАТЬ АККАУНТ</span>
+            </button>
+        </form>
+
+        <div class="auth-links">
+            <p>Уже есть аккаунт? <a href="/login" class="auth-link">ВОЙТИ В СИСТЕМУ</a></p>
+        </div>
+    </div>
+</section>
+{% endblock %}

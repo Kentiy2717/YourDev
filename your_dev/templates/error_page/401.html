@@ -1,0 +1,25 @@
+{% extends "includes/base.html" %}
+
+{% block title %}Требуется авторизация | YOUR DEV{% endblock %}
+{% block description %}Доступ к странице требует авторизации. Войдите в систему.{% endblock %}
+
+{% block content %}
+<section class="error-container">
+    <div class="error-content">
+        <div class="error-code glitch" data-text="401">401</div>
+        <h1 class="error-title">ТРЕБУЕТСЯ АВТОРИЗАЦИЯ</h1>
+        <div class="error-message">
+            <p>Для просмотра этой страницы необходимо войти в систему</p>
+            <p>Зарегистрируйтесь или авторизуйтесь чтобы получить доступ</p>
+        </div>
+        <div class="hero-actions">
+            <a href="/login" class="cyber-button primary">
+                <span class="btn-glitch">🔐 ВОЙТИ</span>
+            </a>
+            <a href="/register" class="cyber-button">
+                <span class="btn-glitch">🚀 РЕГИСТРАЦИЯ</span>
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

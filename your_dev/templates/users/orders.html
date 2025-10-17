@@ -1,0 +1,95 @@
+{% extends "includes/base.html" %}
+
+{% block title %}ЗАКАЗЫ | YOUR DEV{% endblock %}
+{% block description %}Панель управления проектами YOUR DEV. Мониторинг и статистика.{% endblock %}
+
+{% block content %}
+<section class="orders-container">
+    <div class="container">
+        <div class="orders-header">
+            <h1 class="orders-title glitch" data-text="📊 ЗАКАЗЫ">📊 ЗАКАЗЫ</h1>
+            <p class="orders-subtitle">Панель управления вашими проектами</p>
+        </div>
+
+        <div class="auth-nav">
+            <a href="/orders" class="cyber-button primary">
+                <span class="btn-glitch">📊 ЗАКАЗЫ</span>
+            </a>
+            <a href="/profile" class="cyber-button">
+                <span class="btn-glitch">👤 ПРОФИЛЬ</span>
+            </a>            
+            <a href="/logout" class="cyber-button">
+                <span class="btn-glitch">🔓 ВЫЙТИ</span>
+            </a>
+        </div>
+
+        <div class="orders-stats">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <div class="stat-number">{{ projects|length }}</div>
+                <div class="stat-label">АКТИВНЫХ ПРОЕКТОВ</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-user-cog"></i>
+                </div>
+                <div class="stat-number">{% if profile %}100%{% else %}0%{% endif %}</div>
+                <div class="stat-label">ПРОФИЛЬ НАСТРОЕН</div>
+            </div>
+        </div>
+
+        <div class="orders-content">
+            <div class="orders-section">
+                <h2 class="section-title">
+                    <i class="fas fa-code"></i> Активные проекты
+                </h2>
+                <div class="projects-list">
+                    {% if projects %}
+                        {% for project in projects %}
+                        <div class="project-item">
+                            <div class="project-name">Проект #{{ loop.index }}</div>
+                            <div class="project-description">Детали проекта будут здесь. Статус: в разработке</div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="project-item">
+                            <div class="project-name">Нет активных проектов</div>
+                            <div class="project-description">Создайте свой первый проект чтобы начать работу</div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="orders-section">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-line"></i> Статистика
+                </h2>
+                <div class="profile-info">
+                    <div class="info-item">
+                        <span class="info-label">Последняя активность:</span>
+                        <span class="info-value">Сегодня, 14:30</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Всего проектов:</span>
+                        <span class="info-value">{{ projects|length }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Статус системы:</span>
+                        <span class="info-value neon-text">ОНЛАЙН</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="logout-section">
+            <form method="post" action="/logout">
+                <button type="submit" class="cyber-button primary">
+                    <span class="btn-glitch"><i class="fas fa-sign-out-alt"></i> ВЫЙТИ ИЗ СИСТЕМЫ</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

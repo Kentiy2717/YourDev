@@ -26,7 +26,7 @@ async def services(
 ):
 
     service_data = await service_service.get_all_active_services()
-    return templates.TemplateResponse('services.html', {
+    return templates.TemplateResponse('main/services.html', {
         'request': request,
         'services': service_data,
     })

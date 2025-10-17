@@ -1,0 +1,28 @@
+{% extends "includes/base.html" %}
+
+{% block title %}Страница не найдена | YOUR DEV{% endblock %}
+{% block description %}Ошибка 404 - запрашиваемая страница не найдена.{% endblock %}
+
+{% block content %}
+<section class="error-container">
+    <div class="error-content">
+        <div class="error-code glitch" data-text="404">404</div>
+        <h1 class="error-title">СТРАНИЦА НЕ НАЙДЕНА</h1>
+        <div class="error-message">
+            <p>Запрашиваемая страница не существует или была перемещена</p>
+            <div class="error-path">
+                {{ request.path }}
+            </div>
+            <p>Проверьте URL адрес или вернитесь на главную страницу</p>
+        </div>
+        <div class="hero-actions">
+            <a href="/" class="cyber-button primary">
+                <span class="btn-glitch">🏠 НА ГЛАВНУЮ</span>
+            </a>
+            <a href="/#contact" class="cyber-button">
+                <span class="btn-glitch">💬 ПОМОЩЬ</span>
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
